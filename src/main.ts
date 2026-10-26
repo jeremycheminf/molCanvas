@@ -164,6 +164,16 @@ $('view-actions').append(
   colorBtn,
   themeBtn,
 );
+// Only exists on the local dev server (see vite.config.ts); not in the built site or the desktop app.
+if (import.meta.env.DEV) {
+  $('view-actions').append(
+    iconButton('power', 'Stop the local MolCanvas server', async () => {
+      if (!confirm('Stop the local MolCanvas server? Your drawing is auto-saved in this browser.')) return;
+      try { await fetch('/__shutdown', { method: 'POST' }); } catch { /* server already gone */ }
+      document.body.innerHTML = '<p style="font:16px system-ui;padding:2rem">MolCanvas server stopped. You can close this tab. Double-click the desktop shortcut to start it again.</p>';
+    }, 'Stop'),
+  );
+}
 applyTheme();
 
 // ---------- tool rail ----------
